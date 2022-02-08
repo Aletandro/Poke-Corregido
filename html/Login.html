@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Iniciar Sesion</title>
+    <link rel="stylesheet" href="/Styles/Styles2.css">
+</head>
+
+<body>
+    <div class="login-box">
+        <img src="/assets/Img/descarga.png" class="avatar" alt="Avatar Image">
+        <h1>Iniciar Sesion</h1>
+        <form id="login-form">
+            <label for="Email">Email</label>
+            <input id="login-form-email" type="text" placeholder="Ingresa tu Email">
+            <label for="password">Clave</label>
+            <input id="login-form-pass" type="password" placeholder="Ingreso tu clave">
+            <input id="loginS" type="submit" value="Iniciar Sesion">
+            <a href="/index.html" id="login">Registrarse</a><br>
+        </form>
+    </div>
+
+</body>
+<script type="module">
+        
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-analytics.js";
+    import { getDatabase, set, ref, update } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js";
+    
+    const firebaseConfig = {
+        apiKey: "AIzaSyCN2kpoPew4BbjDQD0ZSP32a7Qms_Y2Mdw",
+        authDomain: "pokedesk-9192b.firebaseapp.com",
+        projectId: "pokedesk-9192b",
+        storageBucket: "pokedesk-9192b.appspot.com",
+        messagingSenderId: "647484512381",
+        appId: "1:647484512381:web:3a017080bbe9681e4ff914",
+        measurementId: "G-V2E6FMPFG0"
+    };
+    
+    
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const database= getDatabase(app);
+    const auth = getAuth();
+
+
+        
+        loginS.addEventListener("click", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("login-form-email").value;
+            const password = document.getElementById("login-form-pass").value;
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    const dt = new Date()
+                    update(ref(database, "users/" + user.uid), {
+                        last_login: dt,
+                    })
+                    alert("Usuario Logueado");
+                    window.location.href = "../html/cards.html";
+                })
+
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert("Credenciales Incorrectas");
+                    console.log("mail: "+email+" password: "+password)
+
+                });
+
+
+        })
+</script>
+</html>
